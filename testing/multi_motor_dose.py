@@ -1,3 +1,8 @@
+"""Script for dispensing multiple drops of a certain step number from the 
+syringe pump in order to calibrate drop size.
+
+Written by Cameron Woodard
+"""
 import RPi.GPIO as GPIO
 from time import sleep
 
@@ -6,7 +11,6 @@ PIN_MOTOR_DIR = 16
 PIN_MOTOR_MS1 = 23
 PIN_MOTOR_MS2 = 24
 
-GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(PIN_MOTOR_STEP, GPIO.OUT)
 GPIO.setup(PIN_MOTOR_DIR, GPIO.OUT)
@@ -31,5 +35,5 @@ try:
         print("Drop " + str(x+1) +'.')
         spin_motor(num_steps)
         sleep(0.2)
-finally:
+except KeyboardInterrupt:
     GPIO.cleanup()

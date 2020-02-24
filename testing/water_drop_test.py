@@ -1,8 +1,13 @@
+"""Script for dispensing a test water drop from the solenoid valve.
+
+Written by Cameron Woodard
+"""
 import RPi.GPIO as GPIO
 from time import sleep
 
-GPIO.setmode(GPIO.BCM)
 PIN_SOLENOID = 6
+
+GPIO.setmode(GPIO.BCM)
 GPIO.setup(PIN_SOLENOID, GPIO.OUT)
 GPIO.output(PIN_SOLENOID, False)
 

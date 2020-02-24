@@ -1,3 +1,8 @@
+"""Script for delivering multiple water drops with the solenoid valve in order
+to calibrate water drop size.
+
+Written by Cameron Woodard
+"""
 import RPi.GPIO as GPIO
 from time import sleep
 
@@ -6,7 +11,8 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(PIN_SOLENOID, GPIO.OUT)
 GPIO.output(PIN_SOLENOID, False)
 
-print("This script will dispense multiple drops at the desired drop size.")
+print("This script will dispense multiple water drops at the desired drop "
+      "size.")
 
 try:
     x = input("Please enter the number of drops to dispense: ")
@@ -17,7 +23,8 @@ try:
     except ValueError:
         print("Inputs not valid.")
     else:
-        input("Press enter to dispense %i drops with a %f second valve open time." %(x, t))
+        input("Press enter to dispense %i drops with a %f second valve open "
+              "time." %(x, t))
         for y in range(x):
             print("Drop " + str(y+1) +'.')
             GPIO.output(PIN_SOLENOID, True)
@@ -25,6 +32,5 @@ try:
             GPIO.output(PIN_SOLENOID, False)
             sleep(0.2)
 
-finally:
+except KeyboardInterrupt:
     GPIO.cleanup()
-    print("Thanks for using me!")

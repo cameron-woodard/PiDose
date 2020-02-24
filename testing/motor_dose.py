@@ -1,3 +1,7 @@
+"""Script for dispensing test drop from the syringe pump.
+
+Written by Cameron Woodard
+"""
 import RPi.GPIO as GPIO
 from time import sleep
 
@@ -6,7 +10,6 @@ PIN_MOTOR_DIR = 16
 PIN_MOTOR_MS1 = 23
 PIN_MOTOR_MS2 = 24
 
-GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(PIN_MOTOR_STEP, GPIO.OUT)
 GPIO.setup(PIN_MOTOR_DIR, GPIO.OUT)
@@ -30,5 +33,6 @@ try:
     while True:
         spin_motor(num_steps)
         input("Press enter to dispense another drop.")
-finally:
+
+except KeyboardInterrupt:
     GPIO.cleanup()

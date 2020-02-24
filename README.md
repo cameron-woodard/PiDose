@@ -40,8 +40,6 @@ LOWER_WEIGHT – Lower weight in grams used for calculating average. All weights
 
 SYRINGE_STEPS – Number of steps moved by the stepper motor to deliver a drop of drug solution.
 
-PIN_RFID_D0 – Data GPIO pin for RFID.
-
 PIN_RFID_TIR – Tag in range GPIO pin for RFID.
 
 PIN_SCALE_CLK – Clock GPIO pin for the load cell.

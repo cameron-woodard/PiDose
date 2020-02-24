@@ -1,7 +1,13 @@
+"""Script to open and close the water solenoid valve.
+
+Written by Cameron Woodard
+"""
+
 import RPi.GPIO as GPIO
 
-GPIO.setmode(GPIO.BCM)
 PIN_SOLENOID = 6
+
+GPIO.setmode(GPIO.BCM)
 GPIO.setup(PIN_SOLENOID, GPIO.OUT)
 GPIO.output(PIN_SOLENOID, False)
 

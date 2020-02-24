@@ -1,25 +1,25 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Oct  9 10:10:55 2019
+"""Script for testing the RFID reader.
 
-@author: woody
+Written by Cameron Woodard
 """
 
 from RFIDTagReader import TagReader
-import RPi.GPIO as GPIO, serial, time
+import RPi.GPIO as GPIO
+import serial
+from time import sleep
 
-RFID_serialPort = '/dev/serial0'
-RFID_kind = 'ID'
-RFID_timeout = 1
-RFID_doCheckSum = False
-g_RFID = 27
+RFID_PORT = "/dev/serial0"
+RFID_TIMEOUT = 0.1
+RFID_KIND = 'ID'
+PIN_RFID_TIR = 27
 
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(g_RFID, GPIO.IN)
+GPIO.setup(PIN_RFID_TIR, GPIO.IN)
 
 
 try:
-    tagReader = TagReader (RFID_serialPort, RFID_doCheckSum, timeOutSecs = RFID_timeout, kind=RFID_kind)
+    tag_reader = TagReader(RFID_PORT, doChecksum=False, 
+                              timeOutSecs=RFID_TIMEOUT, kind=RFID_KIND)
 except serial.serialutil.SerialException:
     print ('Error making RFID reader.')
 
@@ -27,15 +27,13 @@ b_tagGone = True
 print('Place a tag next to reader to test detection.')
 try:
     while True:
-        if GPIO.input(g_RFID) == True and b_tagGone:
-            tag = tagReader.readTag()
+        if GPIO.input(PIN_RFID_TIR) == True and b_tagGone:
+            tag = tag_reader.readTag()
             print('RFID tag detected: ', tag)
             b_tagGone = False
-        elif GPIO.input(g_RFID) == False and not b_tagGone:
+        elif GPIO.input(PIN_RFID_TIR) == False and not b_tagGone:
             print('RFID no longer detected.')
             b_tagGone = True
-        time.sleep(0.01)
+        sleep(0.01)
 except KeyboardInterrupt:
-    print ('Quitting...')
-finally:
     GPIO.cleanup()
