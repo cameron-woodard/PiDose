@@ -1,8 +1,3 @@
-GNU nano 2.7.4                                      File: piDose_script.sh                                      
-
-#!/bin/bash
-# This script should set up all libraries required for piDose on a blank Raspberry pi.
-
 sudo apt-get update
 sudo apt-get upgrade
 sudo pip3 install --upgrade setuptools
