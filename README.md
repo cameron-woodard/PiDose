@@ -6,6 +6,8 @@ PiDose is an open-source tool for long-term oral drug administration to mice. A 
 
 piDose.py - Main script required to run the PiDose cage.
 
+piDose_camera.py - Version of the main script that incorporates a camera to take pictures during drop delivery.
+
 monitor.sh - Bash script which should be used to run piDose.py. This script will log all output of PiDose to a file called log.txt and will restart the program should it quit due to an error. This script should be set to run on boot through a crontab task.
 
 mice.cfg - This file maps each RFID to a mouse name, and stores a daily log of water drops, drug drops and bodyweight for each animal. Should be edited before the start of testing to include the RFIDs for each mouse to be tested.
@@ -27,6 +29,8 @@ DRUG_DROPS_PER_GRAM – Number of 10uL drug drops to be given per gram of mouse 
 DRUG_DROP_FREQUENCY – Frequency with which to deliver a drug drop (1 per every x total drops). If this is set to 1, it will deliver only drug drops until the required daily dosage is reached.
 
 SOLENOID_OPEN_TIME – Duration in seconds to open solenoid valve for (to deliver water).
+
+REVERSE_SOLENOID - Set to True if the polarity is reversed on your solenoid valve (i.e. is open when it should be closed).
 
 SCALE_GRAMS_PER_UNIT – Grams per load cell unit.
 

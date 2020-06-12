@@ -2,8 +2,8 @@
 
 This program is meant to be run on a Raspberry Pi operating a PiDose home-cage
 setup. It performs all detection, weighing, drug and water dispensing and data 
-recording necessary for the proper operation of PiDose. Note that this version 
-of the script does not incorporate a camera to take pictures/videos. This 
+recording necessary for the proper operation of PiDose. This version of the 
+script incorporates a camera to take pictures during drop delivery. This 
 program should be run from the provided bash script (monitor.sh), which should 
 be set to automatically run at startup.
 
@@ -15,6 +15,7 @@ import os
 import sys
 import board
 import busio
+import picamera
 import adafruit_mpr121
 import RPi.GPIO as GPIO
 import datetime as dt
@@ -353,7 +354,7 @@ def zero_scale(scale):
             b_reboot_pi = True
 
  
-def dispense_water_callback(cap):
+def dispense_water_callback(cap, camera):
     """Callback routine that is triggered every time a rising edge is detected
     on the capacative sensor input.
     
@@ -363,6 +364,7 @@ def dispense_water_callback(cap):
     Args:
         cap is a adafruit_mpr121.MPR121() object representing the capacitive
         sensor.
+        camera is a picamera.PiCamera() object representing the camera.
         
     Returns:
         None.
@@ -393,6 +395,13 @@ def dispense_water_callback(cap):
             record_event(timestamp, '02')
             water_drops += 1
             dispense_water(drug=False)
+        
+        # Take picture
+        date = (str(timestamp.month) + '-' + str(timestamp.day) + '-' + 
+                str(timestamp.year) + '-' +str (timestamp.hour) + 
+                str(timestamp.minute) + str(timestamp.second))    
+        camera.capture('/home/pi/piDose/data/%s/Pictures/%s_%s.jpg' 
+                       % (mouse_name, mouse_name, date))
     else:
         print("Insufficient time has passed since last drop.")
         
@@ -430,6 +439,12 @@ def main():
     GPIO.setup(PIN_MOTOR_MS2, GPIO.OUT)
     GPIO.output(PIN_MOTOR_MS2, True)
     
+    # Camera Setup
+    camera = picamera.PiCamera(resolution=(480, 360))
+    camera.vflip = True
+    camera.hflip = True
+    camera.rotation = 90
+    
     # Capacitive Sensor Setup
     try:
         i2c = busio.I2C(board.SCL, board.SDA)
@@ -438,7 +453,7 @@ def main():
         cap[CAP_SPOUT_PIN].release_threshold = CAP_RELEASE_THRESHOLD
     except Exception as e:
         raise e("Failed to initialize MPR121, check your wiring!")
-    callback_func = lambda channel, c=cap: dispense_water_callback(c)
+    callback_func = lambda channel, c=cap, cm=camera: dispense_water_callback(c, cm)
     
     # RFID Reader Setup
     try:
@@ -561,6 +576,7 @@ def main():
         if b_mouse_entered:
             save_mouse_variables()
             record_event(dt.datetime.now(), '99')
+        camera.close()
         GPIO.cleanup()
         if b_reboot_pi:
             os.system('sudo reboot')
